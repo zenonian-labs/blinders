@@ -29,12 +29,16 @@ func init() {
 	translator = translate.YandexTranslator{APIKey: os.Getenv("YANDEX_API_KEY")}
 }
 
-func HandleRequest(_ context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+func HandleRequest(
+	_ context.Context,
+	event events.APIGatewayV2HTTPRequest,
+) (events.APIGatewayV2HTTPResponse, error) {
 	text, ok := event.QueryStringParameters["text"]
 	if !ok {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 400,
 			Body:       "required text param",
+			Headers:    map[string]string{"Access-Control-Allow-Origin": "*"},
 		}, nil
 	}
 
@@ -49,6 +53,7 @@ func HandleRequest(_ context.Context, event events.APIGatewayV2HTTPRequest) (eve
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 400,
 			Body:       fmt.Sprintf("cannot translate \"%s\"", text),
+			Headers:    map[string]string{"Access-Control-Allow-Origin": "*"},
 		}, nil
 	}
 
@@ -62,6 +67,7 @@ func HandleRequest(_ context.Context, event events.APIGatewayV2HTTPRequest) (eve
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: 200,
 		Body:       string(resInBytes),
+		Headers:    map[string]string{"Access-Control-Allow-Origin": "*"},
 	}, nil
 }
 

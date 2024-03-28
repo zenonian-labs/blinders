@@ -12,9 +12,13 @@ resource "aws_instance" "blinders" {
 
 resource "aws_instance" "blinders-services" {
   ami                    = "ami-02a2af70a66af6dfb"
-  instance_type          = "t2.micro"
+  instance_type          = "t2.medium"
   key_name               = aws_key_pair.blinders_tf_ec2_key.key_name
   vpc_security_group_ids = [aws_security_group.blinders_ec2_security_group.id]
+
+  root_block_device {
+    volume_size = 30 # in GB
+  }
 
   tags = {
     Name = "blinders-services"
